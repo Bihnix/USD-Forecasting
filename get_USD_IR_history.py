@@ -3,10 +3,18 @@ import requests
 from sklearn.preprocessing import MinMaxScaler
 import warnings
 warnings.filterwarnings('ignore')
+import datetime
 
 import time
 
 current_unixtime = int(time.time())
+
+datetime.datetime.fromtimestamp(current_unixtime)
+
+print(datetime.datetime.fromtimestamp(current_unixtime))
+
+print('Start:\n')
+print(f"Date from {datetime.datetime.fromtimestamp(1262304000)} to {datetime.datetime.fromtimestamp(current_unixtime)}")
 
 url = 'https://dashboard-api.tgju.org/v1/tv/history?symbol=PRICE_DOLLAR_RL&resolution=1D&from=1262304000&to=' + str(current_unixtime)
 try:
@@ -34,6 +42,9 @@ except pd.errors.OutOfBoundsDatetime as e:
   print(f"Error occurred while converting the timestamp: {e}")
 
 hisotry_raw.to_csv('hisotry_raw.csv', index=False)
+
+print('history_raw saved.')
+
 # Select the relevant columns
 history_processed = hisotry_raw[['t','c']].copy()
 # Rename the columns
@@ -48,4 +59,8 @@ history_processed["y"] = scaler.fit_transform(history_processed["y"].values.resh
 
 # Save the DataFrame to a CSV file
 history_processed.to_csv('history_processed.csv', index=False)
-history_processed
+print('history_processed saved.')
+
+print(history_processed.head())
+print(history_processed.tail())
+print('Done.')
